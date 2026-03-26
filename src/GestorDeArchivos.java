@@ -13,27 +13,41 @@ public class GestorDeArchivos {
     }
 
     public void insertar(String padre, String nombre, String tipoArchivos) {
+        //creamos nuevo nodo q sera el resultado de la busqueda recursiva
+        //q empezara desde la raiz hasta el padre q digamos
         Nodo nodoPadre = buscar(raiz, padre);
+        //si el nodo es diferente de null,
         if (nodoPadre != null) {
+            //utilizando el metodo agregarhijo de la clase nodo,
+            //el cual asigna hijos a la lista de hijos del nodo seleccionado
             nodoPadre.agregarHijo(nombre, tipoArchivos);
         } else {
             System.out.println("padre no encontrado");
         }
     }
 
+    //metodo buscar recursivamente
     public Nodo buscar(Nodo actual, String nombre){
+        //si el nodo actual es null, retorna null
         if(actual==null){
             return null;
         }
+        //ahora si el nombre del nodo actual es igual a pasado por
+        //parametro nos retorna dicho nodo
         if(actual.getNombre().equalsIgnoreCase(nombre)){
             return actual;
         }
+        //si no, vas a recorrer la lista de hijos de actual
         for(Nodo hijos: actual.getHijos()){
+            //creamos un nodo q va a llamar al metodo recursivo pero en vez de
+            //empezar por la raiz lo hara por los hijos de actual, y actual sera ahora (hijos)
             Nodo res = buscar(hijos, nombre);
+            //si estabusqueda retorna un resultado diferente de null, lo retornamos
             if(res!=null){
                 return res;
             }
         }
+        //si llega al final sin encontrarlo retornara null
         return null;
     }
 
@@ -106,14 +120,20 @@ public class GestorDeArchivos {
 
 
     public void MoverArchivo(String nombreArchivo, String nombreCarpetaNueva){
+        //lo mismo, creamos nodo q tendra el resultado de la busqueda recursiva
         Nodo nodo = buscar(raiz, nombreArchivo);
+        //se obtiene el padre de ese nodo
         Nodo padre = nodo.getPadre();
         if(padre != null){
+            //si el padre no es null va a eliminar ese nodo de la lista de hijos
             padre.getHijos().remove(nodo);
+            //y aqui el padre de ese nodo sera null (ya q el nodo no pertenece a esa carpeta)
             nodo.setPadre(null);
         }
-
+        //creamos nuevo nodo q sera la nueva direccion del eliminado previamente
         Nodo nuevo = buscar(raiz, nombreCarpetaNueva);
+        //y lo agregamos como hijo
         nuevo.getHijos().add(nodo);
+        //el metodo de copiar es lo mismo pero sin el paso intermedio de eliminar el hijo del padre
     }
 }
